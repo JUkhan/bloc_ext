@@ -1,3 +1,3 @@
 ## 1.0.0
 
-- This is a bloc `Cubit` extension package for enabling - dispatching actions, adding effects, communications among cubits, rxDart full features inside the cubit.
+- This is an extension pacckage for bloc Cubit enables - dispatching actions, adding effects, communications among cubits, rxDart full features etc. inside the cubits.
