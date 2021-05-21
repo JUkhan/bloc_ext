@@ -1,4 +1,4 @@
-# Ajwah_bloc
+# bloc_ext example
 
 The example contains `counter` and `todos` pages those demonstrate bloc_ext out of the box.
 
