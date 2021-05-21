@@ -14,7 +14,7 @@ import 'package:rxdart/rxdart.dart';
 import '../widgets/StreamConsumer.dart';
 
 class CounterCubit extends Cubit<int> with CubitEx {
-  CounterState() : super(0) {
+  CounterCubit() : super(0) {
     $initEx();
   }
   void inc() => emit(state + 1);
@@ -48,7 +48,7 @@ import '../api/todoApi.dart';
 import './searchCategory.dart';
 
 class TodoCubit extends Cubit<List<Todo>> with CubitEx {
-  TodoState() : super([]) {
+  TodoCubit() : super([]) {
     onInit();
   }
 
@@ -127,14 +127,14 @@ class TodoErrorAction extends Action {
   TodoErrorAction(this.error);
 }
 
-class SearchTodoAction extends Action {
-  final String searchText;
-  SearchTodoAction(this.searchText);
-}
-
 class SearchInputAction extends Action {
   final String searchText;
   SearchInputAction(this.searchText);
+}
+
+class SearchTodoAction extends Action {
+  final String searchText;
+  SearchTodoAction(this.searchText);
 }
 
 ```
@@ -148,7 +148,7 @@ import 'package:bloc_ext/bloc_ext.dart';
 enum SearchCategory { All, Active, Completed }
 
 class SearchCategoryCubit extends Cubit<SearchCategory> with CubitEx {
-  SearchCategoryState() : super(SearchCategory.All) {
+  SearchCategoryCubit() : super(SearchCategory.All) {
     $initEx();
   }
 

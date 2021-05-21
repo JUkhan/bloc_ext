@@ -36,6 +36,28 @@ mixin CubitEx<T> on Cubit<T> {
     });
   }
 
+  ///This function registers the effect/s and also
+  ///un-registers previous effeccts (if found any).
+  ///
+  /// [streams] param for one or more effects.
+  ///
+  /// `Example search effect:`
+  ///
+  /// This effect start working when SearchInputAction is dispatched
+  /// then wait 320 mills to receive subsequent actions(SearchInputAction) -
+  /// when reach out time limit it sends a request to server and then dispatches
+  ///`SearchResultAction` when server response come back. Now any `cubit` can
+  /// receive SearchResultAction who override `onAction` method / you can use
+  /// action$.isA\<SearchResultAction\>().
+  ///
+  /// ```dart
+  /// registerEffects([
+  ///   action$.isA<SearchInputAction>()
+  ///   .debounceTime(const Duration(milliseconds: 320))
+  ///   .switchMap((action) => pullData(action.searchText))
+  ///   .map((res) => SearchResultAction(res)),
+  /// ]);
+  /// ```
   @protected
   void registerEffects(Iterable<Stream<Action>> streams) {
     _effectSubscription?.cancel();
