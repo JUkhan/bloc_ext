@@ -1,3 +1,3 @@
 ## 1.0.0
 
-- Initial version, created by Stagehand
+- This is a bloc `Cubit` extension package for enabling - dispatching actions, adding effects, communications among cubits, rxDart full features inside the cubit.

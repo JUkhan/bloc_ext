@@ -8,46 +8,46 @@ import 'todoCubit.dart';
 
 void main() {
   group('Counter Cubit', () {
-    late CounterCubit cubit;
+    late CounterCubit todoCubit;
 
     setUp(() {
-      cubit = CounterCubit();
+      todoCubit = CounterCubit();
     });
 
     tearDown(() {
-      cubit.close();
+      todoCubit.close();
     });
 
     ajwahTest<int>(
-      'emit [1] when cubit.inc',
-      build: () => cubit.stream,
-      act: () => cubit.inc(),
+      'emit [1] when todoCubit.inc',
+      build: () => todoCubit.stream,
+      act: () => todoCubit.inc(),
       expect: [1],
     );
 
     ajwahTest<int>(
-      'emit [-1] when cubit.inc',
-      build: () => cubit.stream,
-      act: () => cubit.dec(),
+      'emit [-1] when todoCubit.inc',
+      build: () => todoCubit.stream,
+      act: () => todoCubit.dec(),
       expect: [-1],
     );
     ajwahTest<String>(
-      "emit ['loading...', '1'] when cubit.asyncInc",
-      build: () => cubit.count$,
-      act: () => cubit.asyncInc(),
+      "emit ['loading...', '1'] when todoCubit.asyncInc",
+      build: () => todoCubit.count$,
+      act: () => todoCubit.asyncInc(),
       expect: ['loading...', '1'],
     );
   });
   group('todos - ', () {
-    late TodoCubit cubit;
+    late TodoCubit todoCubit;
     late SearchCategoryCubit searchCubit;
     setUp(() {
-      cubit = TodoCubit();
+      todoCubit = TodoCubit();
       searchCubit = SearchCategoryCubit();
     });
 
     tearDown(() {
-      cubit.close();
+      todoCubit.close();
       searchCubit.close();
     });
 
@@ -64,7 +64,7 @@ void main() {
         });
 
     ajwahTest<SearchCategory>('Remote cubic -All',
-        build: () => cubit
+        build: () => todoCubit
             .remoteCubit<SearchCategoryCubit>()
             .flatMap((value) => value.stream$),
         verify: (states) {
@@ -72,7 +72,7 @@ void main() {
         });
 
     ajwahTest<SearchCategory>('Remote cubic- Active',
-        build: () => cubit
+        build: () => todoCubit
             .remoteCubit<SearchCategoryCubit>()
             .flatMap((value) => value.stream$),
         act: () => searchCubit.setCategory(SearchCategory.Active),
@@ -80,12 +80,12 @@ void main() {
           expect(states[0], SearchCategory.Active);
         });
     ajwahTest<List<Todo>>('3 todos initialized.',
-        build: () => cubit.todo$,
+        build: () => todoCubit.todo$,
         verify: (states) {
           expect(states[0].length, 3);
         });
     ajwahTest<List<Todo>>('2 active todos.',
-        build: () => cubit.todo$,
+        build: () => todoCubit.todo$,
         act: () => searchCubit.setCategory(SearchCategory.Active),
         skip: 1,
         verify: (states) {
@@ -93,25 +93,30 @@ void main() {
         });
 
     ajwahTest<SearchInputAction>('check action',
-        build: () => cubit.action$.isA<SearchInputAction>(),
+        build: () => todoCubit.action$.isA<SearchInputAction>(),
         act: () {
-          cubit.dispatch(SearchInputAction('h'));
+          todoCubit.dispatch(SearchInputAction('h'));
         },
         verify: (states) {
           expect(states[0].searchText, 'h');
         });
 
     ajwahTest<List<Todo>>('searching by hel',
-        build: () => cubit.todo$,
+        build: () => todoCubit.todo$,
         act: () {
-          cubit.dispatch(SearchInputAction('h'));
-          cubit.dispatch(SearchInputAction('he'));
-          cubit.dispatch(SearchInputAction('hel'));
+          todoCubit.dispatch(SearchInputAction('h'));
+          todoCubit.dispatch(SearchInputAction('he'));
+          todoCubit.dispatch(SearchInputAction('hel'));
         },
         wait: Duration(milliseconds: 200),
         skip: 2,
         verify: (states) {
           expect(states[0].length, 1);
         });
+    test('get remote state', () async {
+      final state =
+          await todoCubit.remoteState<SearchCategoryCubit, SearchCategory>();
+      expect(state, SearchCategory.All);
+    });
   });
 }
