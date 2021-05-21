@@ -1,6 +1,6 @@
 # bloc_ext
 
-- This is an extension pacckage for bloc `Cubit` ( enables - dispatching actions, adding effects, communications among cubits, rxDart full features etc. inside the cubits ).
+- This is an extension package for bloc `Cubit` ( enables - dispatching actions, adding effects, communications among cubits, rxDart full features etc. inside the cubits ).
 
 - Please go through the [example](https://github.com/JUkhan/bloc_ext/tree/master/example) that contains `counter` and `todos` pages those demonstrate bloc_ext out of the box.
 
