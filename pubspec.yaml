@@ -1,5 +1,5 @@
 name: bloc_ext
-description: A starting point for Dart libraries or applications.
+description: This is an extension pacckage for bloc `Cubit` ( enables - dispatching actions, adding effects, communications among cubits, rxDart full features etc. inside the cubits ).
 version: 1.0.0
 homepage: https://github.com/JUkhan/bloc_ext
 
@@ -8,7 +8,8 @@ environment:
 
 dependencies:
   rxdart: ">=0.25.0 <3.0.0"
-  bloc: ">=6.0.0 <10.0.0"
+  bloc: ">=6.0.0 <=12.0.0"
+  meta: ^1.3.0
 
 dev_dependencies:
   pedantic: ^1.9.0

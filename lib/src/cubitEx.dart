@@ -22,6 +22,7 @@ class _RemoteControllerAction<S> extends Action {
 var _dispatcher = BehaviorSubject<Action>.seeded(Action(type: '@Init'));
 var _action$ = Actions(_dispatcher);
 
+///This is an extension pacckage for bloc `Cubit` ( enables - dispatching actions, adding effects, communications among cubits, rxDart full features etc. inside the cubits ).
 mixin CubitEx<T> on Cubit<T> {
   StreamSubscription<Action>? _subscription;
   StreamSubscription<Action>? _effectSubscription;
