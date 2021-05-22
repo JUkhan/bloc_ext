@@ -1,3 +1,8 @@
+## 1.0.2
+
+- Updated readme file
+- introduce a new function: remoteStream()
+
 ## 1.0.1
 
 - Updated readme file

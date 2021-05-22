@@ -1,4 +1,5 @@
 import 'package:ajwah_bloc_test/ajwah_bloc_test.dart';
+import 'package:bloc_ext/bloc_ext.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 
@@ -118,5 +119,72 @@ void main() {
           await todoCubit.remoteState<SearchCategoryCubit, SearchCategory>();
       expect(state, SearchCategory.All);
     });
+    ajwahTest<SearchCategory>('Remote Stream(SearchCategoryCubit)- Active',
+        build: () =>
+            todoCubit.remoteStream<SearchCategoryCubit, SearchCategory>(),
+        act: () => searchCubit.setCategory(SearchCategory.Active),
+        verify: (states) {
+          expect(states[0], SearchCategory.Active);
+        });
+  });
+
+  group('Filter Actiions', () {
+    late CounterCubit controller;
+    setUp(() {
+      controller = CounterCubit();
+    });
+
+    tearDown(() {
+      controller.close();
+    });
+
+    ajwahTest<SearchInputAction>(
+      'action handler isA',
+      build: () => controller.action$.isA<SearchInputAction>(),
+      act: () {
+        controller.dispatch(SearchInputAction('hi'));
+      },
+      expect: [isA<SearchInputAction>()],
+      verify: (models) {
+        expect(models[0].searchText, 'hi');
+      },
+    );
+    ajwahTest<Action>(
+      'action handler whereType',
+      build: () => controller.action$.whereType('mono'),
+      act: () {
+        controller.dispatch(Action(type: 'mono'));
+      },
+      log: (states) {
+        print(states);
+      },
+      expect: [isA<Action>()],
+      verify: (models) {
+        expect(models[0].type, 'mono');
+      },
+    );
+
+    ajwahTest<Action>(
+      'action handler whereTypes',
+      build: () => controller.action$.whereTypes(['monoX', 'monoc']),
+      act: () {
+        controller.dispatch(Action(type: 'monoc'));
+      },
+      expect: [isA<Action>()],
+      verify: (models) {
+        expect(models[0].type, 'monoc');
+      },
+    );
+    ajwahTest<Action>(
+      'action handler where',
+      build: () => controller.action$.where((action) => action.type == 'mono'),
+      act: () {
+        controller.dispatch(Action(type: 'mono'));
+      },
+      expect: [isA<Action>()],
+      verify: (models) {
+        expect(models[0].type, 'mono');
+      },
+    );
   });
 }

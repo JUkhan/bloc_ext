@@ -1,11 +1,11 @@
 # bloc_ext
 
-This is an extension package for bloc `Cubit`. `CubitEx` introduces some cool features for `Cubit`. Now every `Cubit` has the following features:
+An extension package for bloc `Cubit`. `CubitEx` introduces some cool features for `Cubit`. Now every `Cubit` would have the following features:
 
 - Dispatching actions
 - Filtering actions
 - Adding effeccts
-- Communication among Cubits
+- Communications among Cubits
 - RxDart full features
 
 Please go through the [example](https://github.com/JUkhan/bloc_ext/tree/master/example). This example contains `counter` and `todo` pages those demonstrate `CubitEx` out of the box.
@@ -103,7 +103,7 @@ class TodoCubit extends Cubit<List<Todo>> with CubitEx {
   Stream<List<Todo>> get todo$ =>
       Rx.combineLatest3<List<Todo>, SearchCategory, String, List<Todo>>(
           stream$,
-          remoteCubit<SearchCategoryCubit>().flatMap((event) => event.stream$),
+          remoteStream<SearchCategoryCubit, SearchCategory>(),
           action$
               .isA<SearchTodoAction>()
               .map<String>((action) => action.searchText)

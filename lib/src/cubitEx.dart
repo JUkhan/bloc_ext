@@ -113,7 +113,7 @@ mixin CubitEx<T> on Cubit<T> {
     return completer.future;
   }
 
-  ///This function returns Cubit instance as a Steam depends on the type
+  ///This function returns the Cubit instance as a Steam depends on the generic type
   ///you attached with the function.
   ///
   ///`Example`
@@ -140,6 +140,37 @@ mixin CubitEx<T> on Cubit<T> {
     final completer = Completer<Cubit>();
     dispatch(_RemoteControllerAction(Cubit, completer));
     return Stream.fromFuture(completer.future);
+  }
+
+  ///This function returns the state of a the Cubit instance as a Steam depends on the generic types
+  ///you attached with the function.
+  ///
+  ///`Example`
+  ///
+  ///This example returns todo list filtered by searchCategory.
+  ///We need `SearchCategoryCubit` stream combining with `TodoCubit's` stream:
+  ///```dart
+  ///Stream<List<Todo>> get todo$ =>
+  ///    Rx.combineLates2<List<Todo>, SearchCategory, List<Todo>>(
+  ///        stream$,
+  ///        remoteStream<SearchCategoryCubit, SearchCategory>(),
+  ///        (todos, category) {
+  ///        switch (category) {
+  ///           case SearchCategory.Active:
+  ///             return todos.where((todo) => !todo.completed).toList();
+  ///           case SearchCategory.Completed:
+  ///             return todos.where((todo) => todo.completed).toList();
+  ///           default:
+  ///             return todos;
+  ///         }
+  ///    });
+  ///```
+  ///
+  Stream<S> remoteStream<C, S>() {
+    final completer = Completer<C>();
+    dispatch(_RemoteControllerAction(C, completer));
+    return Stream.fromFuture(completer.future)
+        .flatMap((value) => (value as CubitEx<S>).stream$);
   }
 
   ///Return the part of the current state of the cubit as a Stream<S>.

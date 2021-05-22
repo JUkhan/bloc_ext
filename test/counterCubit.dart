@@ -18,10 +18,4 @@ class CounterCubit extends Cubit<int> with CubitEx {
         action$.whereType('asyncInc').mapTo('loading...'),
         stream.map((event) => '$event'),
       ]);
-
-  @override
-  Future<void> close() {
-    print('close::');
-    return super.close();
-  }
 }
