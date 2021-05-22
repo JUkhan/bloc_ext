@@ -1,6 +1,6 @@
 name: bloc_ext
-description: This is an extension pacckage for bloc Cubit ( enables - dispatching actions, adding effects, communications among cubits, rxDart full features etc. inside the cubits ).
-version: 1.0.0
+description: This is an extension pacckage for bloc Cubit ( enables - dispatching actions, filtering actions, adding effects, communications among cubits, rxDart full features etc. inside the cubits ).
+version: 1.0.1
 homepage: https://github.com/JUkhan/bloc_ext
 
 environment:
