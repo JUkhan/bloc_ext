@@ -166,12 +166,8 @@ mixin CubitEx<T> on Cubit<T> {
   ///    });
   ///```
   ///
-  Stream<S> remoteStream<C, S>() {
-    final completer = Completer<C>();
-    dispatch(_RemoteControllerAction(C, completer));
-    return Stream.fromFuture(completer.future)
-        .flatMap((value) => (value as CubitEx<S>).stream$);
-  }
+  Stream<S> remoteStream<C, S>() =>
+      remoteCubit<C>().flatMap((value) => (value as CubitEx<S>).stream$);
 
   ///Return the part of the current state of the cubit as a Stream<S>.
   Stream<S> select<S>(S Function(T state) mapCallback) {
