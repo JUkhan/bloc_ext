@@ -1,3 +1,7 @@
+## 1.0.3
+
+- Updated remotData functions
+
 ## 1.0.2
 
 - Updated readme file

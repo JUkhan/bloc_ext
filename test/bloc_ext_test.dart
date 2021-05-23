@@ -117,6 +117,7 @@ void main() {
     test('get remote state', () async {
       final state =
           await todoCubit.remoteState<SearchCategoryCubit, SearchCategory>();
+
       expect(state, SearchCategory.All);
     });
     ajwahTest<SearchCategory>('Remote Stream(SearchCategoryCubit)- Active',

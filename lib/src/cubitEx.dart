@@ -7,12 +7,6 @@ import 'package:meta/meta.dart';
 
 typedef RemoteStateCallback<S> = void Function(S state);
 
-class _RemoteStateAction<S> extends Action {
-  final Completer<S> completer;
-  final Type controller;
-  _RemoteStateAction(this.controller, this.completer);
-}
-
 class _RemoteControllerAction<S> extends Action {
   final Completer<S> completer;
   final Type controller;
@@ -69,11 +63,7 @@ mixin CubitEx<T> on Cubit<T> {
   @protected
   @mustCallSuper
   void onAction(Action action) {
-    if (action is _RemoteStateAction &&
-        action.controller == runtimeType &&
-        !action.completer.isCompleted) {
-      action.completer.complete(state);
-    } else if (action is _RemoteControllerAction &&
+    if (action is _RemoteControllerAction &&
         action.controller == runtimeType &&
         !action.completer.isCompleted) {
       action.completer.complete(this);
@@ -98,6 +88,12 @@ mixin CubitEx<T> on Cubit<T> {
   ///
   Actions get action$ => _action$;
 
+  Future<C> _remoteData<C extends CubitEx>() {
+    final completer = Completer<C>();
+    dispatch(_RemoteControllerAction(C, completer));
+    return completer.future;
+  }
+
   ///This function returns the current state of a cubit as a `Future` value
   ///
   ///`Example`
@@ -106,12 +102,8 @@ mixin CubitEx<T> on Cubit<T> {
   ///final category = await remoteState<SearchCategoryCubit, SearchCategory>();
   ///```
   ///
-  Future<State> remoteState<Cubit, State>() {
-    final completer = Completer<State>();
-    dispatch(_RemoteStateAction(Cubit, completer));
-
-    return completer.future;
-  }
+  Future<S> remoteState<C extends CubitEx<S>, S>() =>
+      _remoteData<C>().then((value) => value.state);
 
   ///This function returns the Cubit instance as a Steam depends on the generic type
   ///you attached with the function.
@@ -136,11 +128,8 @@ mixin CubitEx<T> on Cubit<T> {
   ///    });
   ///```
   ///
-  Stream<Cubit> remoteCubit<Cubit>() {
-    final completer = Completer<Cubit>();
-    dispatch(_RemoteControllerAction(Cubit, completer));
-    return Stream.fromFuture(completer.future);
-  }
+  Stream<C> remoteCubit<C extends CubitEx>() =>
+      Stream.fromFuture(_remoteData<C>());
 
   ///This function returns the state of a the Cubit instance as a Steam depends on the generic types
   ///you attached with the function.
@@ -166,8 +155,8 @@ mixin CubitEx<T> on Cubit<T> {
   ///    });
   ///```
   ///
-  Stream<S> remoteStream<C, S>() =>
-      remoteCubit<C>().flatMap((value) => (value as CubitEx<S>).stream$);
+  Stream<S> remoteStream<C extends CubitEx<S>, S>() =>
+      remoteCubit<C>().flatMap((value) => value.stream$);
 
   ///Return the part of the current state of the cubit as a Stream<S>.
   Stream<S> select<S>(S Function(T state) mapCallback) {

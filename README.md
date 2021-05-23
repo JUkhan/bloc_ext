@@ -4,7 +4,7 @@ An extension package for bloc `Cubit`. `CubitEx` introduces some cool features f
 
 - Dispatching actions
 - Filtering actions
-- Adding effeccts
+- Adding effects
 - Communications among Cubits
 - RxDart full features
 
