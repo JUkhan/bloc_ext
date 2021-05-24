@@ -1,3 +1,8 @@
+## 1.0.4
+
+- Code clean up
+- introduce onInit() function
+
 ## 1.0.3
 
 - Updated remotData functions

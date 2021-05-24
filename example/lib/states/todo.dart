@@ -34,13 +34,12 @@ class Todo {
 
 class TodoState extends Cubit<List<Todo>> with CubitEx {
   TodoState() : super([]) {
-    onInit();
+    $initEx();
   }
 
+  @override
   void onInit() {
-    $initEx();
     loadTodos();
-
     registerEffects([
       action$
           .isA<SearchInputAction>()

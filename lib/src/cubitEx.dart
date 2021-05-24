@@ -26,10 +26,13 @@ mixin CubitEx<T> on Cubit<T> {
   @protected
   void $initEx() {
     _subscription?.cancel();
-    _subscription = _dispatcher.distinct().listen((action) {
-      onAction(action);
-    });
+    _subscription = _dispatcher.listen(onAction);
+    Future.delayed(Duration(milliseconds: 0)).then((_) => onInit());
   }
+
+  ///This function calls after $initEx().
+  @protected
+  void onInit() {}
 
   ///This function registers the effect/s and also
   ///un-registers previous effeccts (if found any).
@@ -159,9 +162,8 @@ mixin CubitEx<T> on Cubit<T> {
       remoteCubit<C>().flatMap((value) => value.stream$);
 
   ///Return the part of the current state of the cubit as a Stream<S>.
-  Stream<S> select<S>(S Function(T state) mapCallback) {
-    return stream.map<S>(mapCallback).distinct();
-  }
+  Stream<S> select<S>(S Function(T state) mapCallback) =>
+      stream.map<S>(mapCallback).distinct();
 
   Stream<T> get stream$ => stream.startWith(state).distinct();
 
