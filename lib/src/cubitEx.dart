@@ -163,8 +163,9 @@ mixin CubitEx<T> on Cubit<T> {
 
   ///Return the part of the current state of the cubit as a Stream<S>.
   Stream<S> select<S>(S Function(T state) mapCallback) =>
-      stream.map<S>(mapCallback).distinct();
+      stream.startWith(state).map<S>(mapCallback).distinct();
 
+  ///Return the current state of the cubit as a Stream<S>.
   Stream<T> get stream$ => stream.startWith(state).distinct();
 
   @override

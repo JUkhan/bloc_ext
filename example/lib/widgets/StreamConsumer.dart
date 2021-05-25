@@ -93,18 +93,20 @@ class _StreamConsumerState<S> extends State<StreamConsumer<S>> {
   @override
   void initState() {
     _subscription = widget.stream.listen((event) {
-      if (!(event is SCResponse))
+      if (!(event is SCResponse)) {
         _data = event is S ? SCData(event) : SCError(event);
-      else
+      } else {
         _data = event;
-      if (widget.filter == null)
+      }
+      if (widget.filter == null) {
         setState(() {
           widget.listener?.call(context, event);
         });
-      else if (widget.filter!(context, event))
+      } else if (widget.filter!(context, event)) {
         setState(() {
           widget.listener?.call(context, event);
         });
+      }
     }, onError: (error) {
       setState(() {
         _data = SCError(error);

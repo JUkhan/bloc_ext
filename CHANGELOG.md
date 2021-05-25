@@ -1,6 +1,10 @@
+## 1.0.5
+
+- refactoring select() function
+
 ## 1.0.4
 
-- Code clean up
+- code refactoring
 - introduce onInit() function
 
 ## 1.0.3

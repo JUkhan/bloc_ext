@@ -20,6 +20,7 @@ class TodoPage extends HookWidget {
   Widget build(BuildContext context) {
     final tsCtrl = Get.find<TodoState>();
 
+    //Notified by an error. When you try to complete the 'Learn Reactive programming' todo.
     useNotifier<String>(
         tsCtrl.action$.isA<TodoErrorAction>().map((action) => action.error),
         (error) {

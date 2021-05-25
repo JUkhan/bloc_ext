@@ -40,6 +40,11 @@ class TodoState extends Cubit<List<Todo>> with CubitEx {
   @override
   void onInit() {
     loadTodos();
+    /**
+     * Effect for todo search input. For each key strokes AddTodo widget dispatching 
+     * SearchInputAction. But effect throttles it for 320 mills to collect the subsequent
+     * actions and then finally dispatching SearchTodoAction.
+     */
     registerEffects([
       action$
           .isA<SearchInputAction>()
@@ -49,9 +54,7 @@ class TodoState extends Cubit<List<Todo>> with CubitEx {
   }
 
   void loadTodos() {
-    getTodos().listen((todos) {
-      emit(todos);
-    });
+    getTodos().listen(emit);
   }
 
   void add(String description) {
@@ -78,13 +81,15 @@ class TodoState extends Cubit<List<Todo>> with CubitEx {
       .map((todos) => todos.where((todo) => !todo.completed).toList())
       .map((todos) => '${todos.length} items left');
 
+  ///Here is an example combining multiplle cubits(TodoState, SearchCategoryState)
+  ///with SearchTodoAction and returns single todos stream.
   Stream<List<Todo>> get todo$ =>
       Rx.combineLatest3<List<Todo>, SearchCategory, String, List<Todo>>(
           stream$,
           remoteStream<SearchCategoryState, SearchCategory>(),
           action$
               .isA<SearchTodoAction>()
-              .map<String>((action) => action.searchText)
+              .map((action) => action.searchText)
               .doOnData((event) {
             print('searchText: ' + event);
           }).startWith(''), (todos, category, searchText) {

@@ -127,6 +127,12 @@ void main() {
         verify: (states) {
           expect(states[0], SearchCategory.Active);
         });
+
+    ajwahTest<int>('select() method',
+        build: () => todoCubit.select((state) => state.length),
+        verify: (states) {
+          expect(states[0], 3);
+        });
   });
 
   group('Filter Actiions', () {

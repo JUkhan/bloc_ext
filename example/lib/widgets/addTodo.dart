@@ -20,8 +20,9 @@ class AddTodo extends HookWidget {
           Expanded(
             child: TextField(
               onChanged: (txt) {
-                if (isSearchEnable.value)
+                if (isSearchEnable.value) {
                   tsCtrl.dispatch(SearchInputAction(txt));
+                }
               },
               autofocus: true,
               controller: newTodoController,
@@ -44,8 +45,9 @@ class AddTodo extends HookWidget {
               tsCtrl.dispatch(SearchInputAction(''));
               newTodoController.clear();
             },
-            child: const Icon(Icons.search),
+            tooltip: 'Todo Search',
             mini: true,
+            child: const Icon(Icons.search),
           ),
         ],
       ),
