@@ -107,7 +107,7 @@ class TodoCubit extends Cubit<List<Todo>> with CubitEx {
   Stream<List<Todo>> get todo$ =>
       Rx.combineLatest3<List<Todo>, SearchCategory, String, List<Todo>>(
           stream$,
-          remoteStream<SearchCategoryState, SearchCategory>(),
+          remoteStream<SearchCategoryCubit, SearchCategory>(),
           action$
               .isA<SearchTodoAction>()
               .map((action) => action.searchText)
