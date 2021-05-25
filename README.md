@@ -88,7 +88,8 @@ class TodoCubit extends Cubit<List<Todo>> with CubitEx {
         (todo) => emit([
               for (var item in state)
                 if (item.id == todo.id) todo else item,
-            ]), onError: (error) {
+            ]),
+       onError: (error) {
       dispatch(TodoErrorAction(error));
     });
   }
