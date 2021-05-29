@@ -9,35 +9,43 @@ import 'todoCubit.dart';
 
 void main() {
   group('Counter Cubit', () {
-    late CounterCubit todoCubit;
+    late CounterCubit counterCubit;
 
     setUp(() {
-      todoCubit = CounterCubit();
+      counterCubit = CounterCubit();
     });
 
     tearDown(() {
-      todoCubit.close();
+      counterCubit.close();
     });
 
     ajwahTest<int>(
       'emit [1] when todoCubit.inc',
-      build: () => todoCubit.stream,
-      act: () => todoCubit.inc(),
+      build: () => counterCubit.stream,
+      act: () => counterCubit.inc(),
       expect: [1],
     );
 
     ajwahTest<int>(
       'emit [-1] when todoCubit.inc',
-      build: () => todoCubit.stream,
-      act: () => todoCubit.dec(),
+      build: () => counterCubit.stream,
+      act: () => counterCubit.dec(),
       expect: [-1],
     );
     ajwahTest<String>(
       "emit ['loading...', '1'] when todoCubit.asyncInc",
-      build: () => todoCubit.count$,
-      act: () => todoCubit.asyncInc(),
+      build: () => counterCubit.count$,
+      act: () => counterCubit.asyncInc(),
       expect: ['loading...', '1'],
     );
+    ajwahTest<int>('mapEffectsToState',
+        build: () => counterCubit.stream$,
+        act: () => counterCubit.dispatch(Action(type: 'async+')),
+        wait: const Duration(milliseconds: 15),
+        skip: 1,
+        verify: (states) {
+          expect(states[0], 5);
+        });
   });
   group('todos - ', () {
     late TodoCubit todoCubit;

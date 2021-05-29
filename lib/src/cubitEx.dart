@@ -20,6 +20,7 @@ var _action$ = Actions(_dispatcher);
 mixin CubitEx<T> on Cubit<T> {
   StreamSubscription<Action>? _subscription;
   StreamSubscription<Action>? _effectSubscription;
+  StreamSubscription<T>? _mapEffectsSubscription;
 
   ///You need to call this function to receive action
   ///on you cubit and to enable communications to the other cubits.
@@ -62,6 +63,21 @@ mixin CubitEx<T> on Cubit<T> {
     _effectSubscription = Rx.merge(streams).listen(dispatch);
   }
 
+  ///This function just like `registerEffects` but return `Stream<State>` instead of `Stream<Action>`.
+  /// ```dart
+  /// mapEffectsToState([
+  ///   action$.isA<AsyncIncAction>()
+  ///   .delay(const Duration(milliseconds: 500))
+  ///   .map((action) => state+1),
+  ///
+  /// ]);
+  /// ```
+  @protected
+  void mapEffectsToState(Iterable<Stream<T>> streams) {
+    _mapEffectsSubscription?.cancel();
+    _mapEffectsSubscription = Rx.merge(streams).listen(emit);
+  }
+
   ///This function fired when action dispatches from the cubits.
   @protected
   @mustCallSuper
@@ -84,10 +100,10 @@ mixin CubitEx<T> on Cubit<T> {
     _dispatcher.add(action);
   }
 
-  ///Return a `Acctions` instance.
+  ///Return a `Actions` instance.
   ///
-  ///So that you can filter the actions those are dispatches throughout
-  ///the application. And also make effect/s on it.
+  ///To filter the actions those are dispatches throughout
+  ///the application. And also make effect/s on it/map to state.
   ///
   Actions get action$ => _action$;
 
@@ -172,6 +188,7 @@ mixin CubitEx<T> on Cubit<T> {
   Future<void> close() async {
     await _subscription?.cancel();
     await _effectSubscription?.cancel();
+    await _mapEffectsSubscription?.cancel();
     return super.close();
   }
 }

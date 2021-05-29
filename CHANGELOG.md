@@ -1,3 +1,7 @@
+## 1.0.6
+
+- introduce a new feature(effects -> state): void mapEffectsToState(Iterable<Stream<T>> streams)
+
 ## 1.0.5
 
 - refactoring select() function
