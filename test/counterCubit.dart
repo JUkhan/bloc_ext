@@ -8,7 +8,7 @@ class CounterCubit extends Cubit<int> with CubitEx {
   }
   @override
   void onInit() {
-    mapEffectsToState([
+    mapActionToState([
       action$
           .whereType('async+')
           .delay(const Duration(milliseconds: 10))

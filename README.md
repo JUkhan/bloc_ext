@@ -23,9 +23,10 @@ class CounterState extends Cubit<int> with CubitEx {
   CounterState() : super(0) {
     $initEx();
   }
+
   @override
   void onInit() {
-    mapEffectsToState([
+    mapActionToState([
       action$
           .whereType('asyncInc')
           .delay(const Duration(seconds: 1))

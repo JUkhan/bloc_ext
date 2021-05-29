@@ -1,3 +1,7 @@
+## 1.0.7
+
+- replace function name: mapEffectsToState -> mapActionToState
+
 ## 1.0.6
 
 - introduce a new feature(effects -> state): void mapEffectsToState(Iterable<Stream<T>> streams)

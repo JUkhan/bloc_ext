@@ -1,6 +1,6 @@
 name: bloc_ext
 description: An extension package for bloc Cubit - actions, effects, communications among cubits, rxDart.
-version: 1.0.6
+version: 1.0.7
 homepage: https://github.com/JUkhan/bloc_ext
 
 environment:

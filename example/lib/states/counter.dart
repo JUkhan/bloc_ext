@@ -10,7 +10,7 @@ class CounterState extends Cubit<int> with CubitEx {
   }
   @override
   void onInit() {
-    mapEffectsToState([
+    mapActionToState([
       action$
           .whereType('asyncInc')
           .delay(const Duration(seconds: 1))

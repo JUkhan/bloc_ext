@@ -65,7 +65,7 @@ mixin CubitEx<T> on Cubit<T> {
 
   ///This function just like `registerEffects` but return `Stream<State>` instead of `Stream<Action>`.
   /// ```dart
-  /// mapEffectsToState([
+  /// mapActionToState([
   ///   action$.isA<AsyncIncAction>()
   ///   .delay(const Duration(milliseconds: 500))
   ///   .map((action) => state+1),
@@ -73,7 +73,7 @@ mixin CubitEx<T> on Cubit<T> {
   /// ]);
   /// ```
   @protected
-  void mapEffectsToState(Iterable<Stream<T>> streams) {
+  void mapActionToState(Iterable<Stream<T>> streams) {
     _mapEffectsSubscription?.cancel();
     _mapEffectsSubscription = Rx.merge(streams).listen(emit);
   }
