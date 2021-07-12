@@ -6,6 +6,12 @@ class CounterCubit extends Cubit<int> with CubitEx {
   CounterCubit() : super(0) {
     $initEx();
   }
+
+  @override
+  void onInit() {
+    effectOnAction(action$.whereType('testEffectOnAction').map((event) => 101));
+  }
+
   EffectFun<int> get asyncIncBy => effect<int>((num$) => num$
       .delay(const Duration(milliseconds: 10))
       .doOnData((by) => emit(state + by)));

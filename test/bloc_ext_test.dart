@@ -43,10 +43,14 @@ void main() {
       build: () => counterCubit.stream$,
       act: () => counterCubit.asyncIncBy(10),
       wait: const Duration(milliseconds: 10),
-      log: (models) {
-        prints(models);
-      },
       expect: [0, 10],
+    );
+    ajwahTest<int>(
+      'testEffectOnAction',
+      build: () => counterCubit.stream$,
+      skip: 1,
+      act: () => counterCubit.dispatch(Action(type: 'testEffectOnAction')),
+      expect: [101],
     );
   });
   group('todos - ', () {

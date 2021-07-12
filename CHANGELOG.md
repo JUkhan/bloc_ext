@@ -1,3 +1,7 @@
+## 1.3.0
+
+- exposed effectOnAction method
+
 ## 1.2.0
 
 - removed registerEffects and mapActionToState functions.

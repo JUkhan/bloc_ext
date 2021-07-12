@@ -16,14 +16,14 @@ var _action$ = Actions(_dispatcher);
 
 ///This is an extension pacckage for bloc `Cubit` ( enables - dispatching actions, adding effects, communications among cubits, rxDart full features etc. inside the cubits ).
 mixin CubitEx<T> on Cubit<T> {
-  StreamSubscription<Action>? _subscription;
+  //StreamSubscription<Action>? _subscription;
+  CompositeSubscription composite = CompositeSubscription();
 
   ///You need to call this function to receive action
   ///on you cubit and to enable communications to the other cubits.
   @protected
   void $initEx() {
-    _subscription?.cancel();
-    _subscription = _dispatcher.listen(onAction);
+    composite.add(_dispatcher.listen(onAction));
     Future.delayed(Duration(milliseconds: 0)).then((_) => onInit());
   }
 
@@ -137,9 +137,25 @@ mixin CubitEx<T> on Cubit<T> {
   ///Return the current state of the cubit as a Stream<S>.
   Stream<T> get stream$ => stream.startWith(state).distinct();
 
+  ///Use this function inside `onInit()` method only
+  ///
+  ///`Example`
+  ///```dart
+  ///@override
+  ///void onInit() {
+  ///   effectOnAction(action$
+  ///     .whereType('testEffectOnAction')
+  ///     .map((event) => 101)
+  ///   );
+  ///}
+  ///```
+  ///
+  @protected
+  void effectOnAction(Stream<T> aStream) => composite.add(aStream.listen(emit));
+
   @override
   Future<void> close() async {
-    await _subscription?.cancel();
+    composite.clear();
     return super.close();
   }
 }
