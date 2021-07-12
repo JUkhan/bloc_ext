@@ -38,14 +38,16 @@ void main() {
       act: () => counterCubit.asyncInc(),
       expect: ['loading...', '1'],
     );
-    ajwahTest<int>('mapEffectsToState',
-        build: () => counterCubit.stream$,
-        act: () => counterCubit.dispatch(Action(type: 'async+')),
-        wait: const Duration(milliseconds: 15),
-        skip: 1,
-        verify: (states) {
-          expect(states[0], 5);
-        });
+    ajwahTest<int>(
+      "emit ['loading...', '1'] when todoCubit.asyncIncBy",
+      build: () => counterCubit.stream$,
+      act: () => counterCubit.asyncIncBy(10),
+      wait: const Duration(milliseconds: 10),
+      log: (models) {
+        prints(models);
+      },
+      expect: [0, 10],
+    );
   });
   group('todos - ', () {
     late TodoCubit todoCubit;
@@ -203,3 +205,7 @@ void main() {
     );
   });
 }
+//pub run test_coverage
+//pub run build_runner test
+//pub run build_runner build
+//pub publish

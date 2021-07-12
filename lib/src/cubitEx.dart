@@ -5,8 +5,6 @@ import 'actions.dart';
 import 'action.dart';
 import 'package:meta/meta.dart';
 
-typedef RemoteStateCallback<S> = void Function(S state);
-
 class _RemoteControllerAction<S> extends Action {
   final Completer<S> completer;
   final Type controller;
@@ -19,8 +17,6 @@ var _action$ = Actions(_dispatcher);
 ///This is an extension pacckage for bloc `Cubit` ( enables - dispatching actions, adding effects, communications among cubits, rxDart full features etc. inside the cubits ).
 mixin CubitEx<T> on Cubit<T> {
   StreamSubscription<Action>? _subscription;
-  StreamSubscription<Action>? _effectSubscription;
-  StreamSubscription<T>? _mapEffectsSubscription;
 
   ///You need to call this function to receive action
   ///on you cubit and to enable communications to the other cubits.
@@ -34,49 +30,6 @@ mixin CubitEx<T> on Cubit<T> {
   ///This function calls after $initEx().
   @protected
   void onInit() {}
-
-  ///This function registers the effect/s and also
-  ///un-registers previous effeccts (if found any).
-  ///
-  /// [streams] param for one or more effects.
-  ///
-  /// `Example search effect:`
-  ///
-  /// This effect start working when SearchInputAction is dispatched
-  /// then wait 320 mills to receive subsequent actions(SearchInputAction) -
-  /// when reach out time limit it sends a request to server and then dispatches
-  ///`SearchResultAction` when server response come back. Now any `cubit` can
-  /// receive SearchResultAction who override `onAction` method / you can use
-  /// action$.isA\<SearchResultAction\>().
-  ///
-  /// ```dart
-  /// registerEffects([
-  ///   action$.isA<SearchInputAction>()
-  ///   .debounceTime(const Duration(milliseconds: 320))
-  ///   .switchMap((action) => pullData(action.searchText))
-  ///   .map((res) => SearchResultAction(res)),
-  /// ]);
-  /// ```
-  @protected
-  void registerEffects(Iterable<Stream<Action>> streams) {
-    _effectSubscription?.cancel();
-    _effectSubscription = Rx.merge(streams).listen(dispatch);
-  }
-
-  ///This function just like `registerEffects` but return `Stream<State>` instead of `Stream<Action>`.
-  /// ```dart
-  /// mapActionToState([
-  ///   action$.isA<AsyncIncAction>()
-  ///   .delay(const Duration(milliseconds: 500))
-  ///   .map((action) => state+1),
-  ///
-  /// ]);
-  /// ```
-  @protected
-  void mapActionToState(Iterable<Stream<T>> streams) {
-    _mapEffectsSubscription?.cancel();
-    _mapEffectsSubscription = Rx.merge(streams).listen(emit);
-  }
 
   ///This function fired when action dispatches from the cubits.
   @protected
@@ -187,8 +140,6 @@ mixin CubitEx<T> on Cubit<T> {
   @override
   Future<void> close() async {
     await _subscription?.cancel();
-    await _effectSubscription?.cancel();
-    await _mapEffectsSubscription?.cancel();
     return super.close();
   }
 }

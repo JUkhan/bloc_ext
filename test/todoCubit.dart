@@ -30,12 +30,12 @@ final List<Todo> initTodos = [
 class TodoCubit extends Cubit<List<Todo>> with CubitEx {
   TodoCubit() : super(initTodos) {
     $initEx();
-    registerEffects([
-      action$
-          .isA<SearchInputAction>()
-          .debounceTime(const Duration(milliseconds: 10))
-          .map((action) => SearchTodoAction(action.searchText))
-    ]);
+    // registerEffects([
+    //   action$
+    //       .isA<SearchInputAction>()
+    //       .debounceTime(const Duration(milliseconds: 10))
+    //       .map((action) => SearchTodoAction(action.searchText))
+    // ]);
   }
 
   Stream<List<Todo>> get todo$ =>
@@ -43,7 +43,8 @@ class TodoCubit extends Cubit<List<Todo>> with CubitEx {
           stream$,
           remoteCubit<SearchCategoryCubit>().flatMap((event) => event.stream$),
           action$
-              .isA<SearchTodoAction>()
+              .isA<SearchInputAction>()
+              .debounceTime(const Duration(milliseconds: 10))
               .map<String>((action) => action.searchText)
               .startWith(''), (todos, category, searchText) {
         if (searchText.isNotEmpty) {

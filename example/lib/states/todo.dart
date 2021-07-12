@@ -45,12 +45,12 @@ class TodoState extends Cubit<List<Todo>> with CubitEx {
      * SearchInputAction. But effect throttles it for 320 mills to collect the subsequent
      * actions and then finally dispatching SearchTodoAction.
      */
-    registerEffects([
-      action$
-          .isA<SearchInputAction>()
-          .debounceTime(const Duration(milliseconds: 320))
-          .map((action) => SearchTodoAction(action.searchText))
-    ]);
+    // registerEffects([
+    //   action$
+    //       .isA<SearchInputAction>()
+    //       .debounceTime(const Duration(milliseconds: 320))
+    //       .map((action) => SearchTodoAction(action.searchText))
+    // ]);
   }
 
   void loadTodos() {
@@ -88,7 +88,8 @@ class TodoState extends Cubit<List<Todo>> with CubitEx {
           stream$,
           remoteStream<SearchCategoryState, SearchCategory>(),
           action$
-              .isA<SearchTodoAction>()
+              .isA<SearchInputAction>()
+              .debounceTime(const Duration(milliseconds: 320))
               .map((action) => action.searchText)
               .doOnData((event) {
             print('searchText: ' + event);

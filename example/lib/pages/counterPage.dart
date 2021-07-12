@@ -31,7 +31,7 @@ class CounterPage extends StatelessWidget {
                 child: const Text('Dec'),
               ),
               ElevatedButton(
-                onPressed: () => csCtl.dispatch(Action(type: 'asyncInc')),
+                onPressed: () => csCtl.asyncInc(),
                 child: const Text('Async Inc'),
               ),
             ],

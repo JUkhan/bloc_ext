@@ -1,11 +1,11 @@
 # bloc_ext
 
-An extension package for bloc `Cubit`. `CubitEx` introduces some cool features for `Cubit`. Now every `Cubit` would have the following features:
+An extension package for bloc `Cubit`. `CubitEx` introducd some cool features for `Cubit`. Now every `Cubit` would have the following features:
 
 - Dispatching actions
 - Filtering actions
 - Adding effects
-- Communications among Cubits
+- Communications among Cubits [ `Although cubits are independents`]
 - RxDart full features
 
 Please go through the [example](https://github.com/JUkhan/bloc_ext/tree/master/example). This example contains `counter` and `todo` pages those demonstrate `CubitEx` out of the box.
@@ -20,23 +20,22 @@ import 'package:rxdart/rxdart.dart';
 import '../widgets/StreamConsumer.dart';
 
 class CounterState extends Cubit<int> with CubitEx {
-  CounterState() : super(0) {
-    $initEx();
-  }
-
-  @override
-  void onInit() {
-    mapActionToState([
-      action$
-          .whereType('asyncInc')
-          .delay(const Duration(seconds: 1))
-          .map((event) => state + 1),
-    ]);
-  }
+  CounterState() : super(0);
 
   void inc() => emit(state + 1);
 
   void dec() => emit(state - 1);
+
+  void asyncInc() async {
+    dispatch(Action(type: 'asyncInc'));
+    await Future.delayed(const Duration(seconds: 1));
+    inc();
+  }
+
+  EffectFun<int> get asyncIncBy => effect<int>((num$) => num$
+      .doOnData((_) => dispatch(Action(type: 'asyncInc')))
+      .delay(const Duration(seconds: 1))
+      .doOnData((by) => emit(state + by)));
 
   Stream<SCResponse> get count$ => Rx.merge([
         action$.whereType('asyncInc').mapTo(SCLoading()),
@@ -45,8 +44,6 @@ class CounterState extends Cubit<int> with CubitEx {
             : SCData('$data')),
       ]);
 }
-
-
 ```
 
 `TodoCubit`
@@ -67,17 +64,6 @@ class TodoCubit extends Cubit<List<Todo>> with CubitEx {
   @override
   void onInit() {
     loadTodos();
-    /**
-     * Effect for todo search input. For each key strokes AddTodo widget dispatching
-     * SearchInputAction. But effect throttles it for 320 mills to collect the subsequent
-     * actions and then finally dispatching SearchTodoAction.
-     */
-    registerEffects([
-      action$
-          .isA<SearchInputAction>()
-          .debounceTime(const Duration(milliseconds: 320))
-          .map((action) => SearchTodoAction(action.searchText))
-    ]);
   }
 
   void loadTodos() {
@@ -109,14 +95,15 @@ class TodoCubit extends Cubit<List<Todo>> with CubitEx {
       .map((todos) => todos.where((todo) => !todo.completed).toList())
       .map((todos) => '${todos.length} items left');
 
-  ///Here is an example - combining multiplle cubits(TodoCubit, SearchCategoryCubit)
-  ///with SearchTodoAction and returns single todos stream.
+  ///Combining multiplle cubits(TodoCubit, SearchCategoryCubit)
+  ///with SearchInputAction and return single todos stream.
   Stream<List<Todo>> get todo$ =>
       Rx.combineLatest3<List<Todo>, SearchCategory, String, List<Todo>>(
           stream$,
           remoteStream<SearchCategoryCubit, SearchCategory>(),
           action$
-              .isA<SearchTodoAction>()
+              .isA<SearchInputAction>()
+              .debounceTime(const Duration(milliseconds: 320))
               .map((action) => action.searchText)
               .startWith(''),
           (todos, category, searchText) {
@@ -145,11 +132,6 @@ class TodoErrorAction extends Action {
 class SearchInputAction extends Action {
   final String searchText;
   SearchInputAction(this.searchText);
-}
-
-class SearchTodoAction extends Action {
-  final String searchText;
-  SearchTodoAction(this.searchText);
 }
 
 ```

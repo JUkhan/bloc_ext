@@ -1,3 +1,8 @@
+## 1.2.0
+
+- removed registerEffects and mapActionToState functions.
+- exposed effect function
+
 ## 1.0.7
 
 - replace function name: mapEffectsToState -> mapActionToState
